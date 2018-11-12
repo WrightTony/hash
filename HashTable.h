@@ -38,38 +38,49 @@ HashTable::HashTable() {
 	this->num = 0;
 }
 
-HashTable::HashTable(size_t) {
-	this->table = new table(size_t);
-	this->num 0;
+HashTable::HashTable(size_t tableSize) {
+	this->table = new Table(tableSize);
+	this->num = 0;
 }
 
 HashTable::~HashTable() {
-	table.clear();
+	delete table;
 }
 
-HashTable::size_t size() {
-	return table.size();
+size_t HashTable::size() {
+	return table->size();
 }
 
-HashTable::size_t hash_function(ulint key) {
-	return key % table.size();
+size_t HashTable::hash_function(unsigned long key) {
+	return key % table->size();
 }
 
-HashTable::ulint getValue(ulint key) {
+unsigned long HashTable::getValue(unsigned long key) {
+	
+	unsigned long value = 0;
+
 	int hashNum = hash_function(key);
 
-	return table.at(hashNum)->getValue();
+	std::vector<list<HashNode> >::iterator it;
+
+	for (it = table[hashNum].begin(); it != table[hashNum].end(); ++it){
+		if (it->value == key){
+			value = it->value;
+		}
+	}
+
+	return value;
 }
 
-HashTable::void insert(ulint key, ulint value) {
+void HashTable::insert(unsigned long key, unsigned long value) {
 	int hashNum = hash_function(key);
 
-	node = new HashNode(ulint key, ulint value);
+	HashNode *node = new HashNode(key, value);
 
 	table.at(hashNum) = node;
 }
 
-HashTable::void erase(ulint key) {
+void HashTable::erase(unsigned long key) {
 	int hashNum = hash_function(key);
 }
 

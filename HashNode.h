@@ -12,19 +12,21 @@ class HashNode {
 public:
 
   // Add constructors, destructor if necessary
-
-//constructor
 	HashNode(unsigned long key, unsigned long value);
 	~HashNode();
-  unsigned long getKey() { return key; }
-  unsigned long getValue() { return value; }
-  void assign(unsigned long key, unsigned long value); 
+	
+  	unsigned long getKey() { return key; }
+  	unsigned long getValue() { return value; }
+  	void assign(unsigned long key, unsigned long value); 
 
   // extend if necessary
 };
 
+HashNode::HashNode(unsigned long key, unsigned long value){
+	assign(key, value);
+}
 
-HashNode::void assign(unsigned long key, unsigned long value) {
+void HashNode::assign(unsigned long key, unsigned long value) {
 	this->key = key;
 	this->value = value;
 }
