@@ -12,8 +12,8 @@ class HashNode {
 public:
 
   // Add constructors, destructor if necessary
+	HashNode();
 	HashNode(unsigned long key, unsigned long value);
-	~HashNode();
 	
   	unsigned long getKey() { return key; }
   	unsigned long getValue() { return value; }
@@ -21,6 +21,11 @@ public:
 
   // extend if necessary
 };
+
+HashNode::HashNode(){
+	this->key = 0;
+	this->value = 0;
+}
 
 HashNode::HashNode(unsigned long key, unsigned long value){
 	assign(key, value);

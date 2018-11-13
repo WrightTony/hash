@@ -2,6 +2,7 @@
 #define MY_HASH_TABLE
 
 #include "HashNode.h"
+#include <iostream>
 #include <vector>
 #include <list>
 
@@ -12,7 +13,7 @@ enum HashTableError { OUT_OF_MEMORY, KEY_NOT_FOUND, DUPLICATE_KEY }; // extend i
 typedef unsigned long ulint;
 
 class HashTable {
-  typedef vector <list<HashNode> > Table;
+  typedef vector <list<HashNode>> Table;
   Table *table; // size of table is stored in the Table data structure
   size_t num;   // number of entries in the HashTable;
 
@@ -34,6 +35,7 @@ public:
 };
 
 HashTable::HashTable() {
+	//initialise values
 	this->table = new Table(11);
 	this->num = 0;
 }
@@ -56,32 +58,64 @@ size_t HashTable::hash_function(unsigned long key) {
 }
 
 unsigned long HashTable::getValue(unsigned long key) {
-	
-	unsigned long value = 0;
 
 	int hashNum = hash_function(key);
 
-	std::vector<list<HashNode> >::iterator it;
+	list<HashNode> ::iterator it;
 
-	for (it = table[hashNum].begin(); it != table[hashNum].end(); ++it){
-		if (it->value == key){
-			value = it->value;
+	for (it = table->at(hashNum).begin(); it != table->at(hashNum).end(); ++it){
+		if (it->getKey() == key){
+			return it->getValue();
 		}
 	}
 
-	return value;
+	return KEY_NOT_FOUND;
 }
 
 void HashTable::insert(unsigned long key, unsigned long value) {
+
 	int hashNum = hash_function(key);
 
-	HashNode *node = new HashNode(key, value);
+	HashNode node(key, value);
 
-	table.at(hashNum) = node;
+	table->at(hashNum).push_back(node);
+
+	//increase num by 1
 }
 
 void HashTable::erase(unsigned long key) {
 	int hashNum = hash_function(key);
+
+	list<HashNode> ::iterator it;
+
+	for (it = table->at(hashNum).begin(); it != table->at(hashNum).end(); ++it){
+		if (it->getKey() == key){
+			table->at(hashNum).erase(it);
+		}
+	}
+
+}
+
+void HashTable::rehash(size_t newSize){
+
+	Table* temp;
+
+	temp = this->table;
+
+	//create new table
+	this->table = new Table(newSize);
+
+	//loop for number of elements in the hash table
+	for (size_t i = 0; i < temp->size(); i++){
+		//take the first element in the table
+
+		list<HashNode> ::iterator it;
+
+		//loop through each element in each list
+		for(it = temp->at(i).begin(); it != temp->at(i).end(); ++it){
+			insert(it->getKey(), it->getValue());
+		}
+	}
 }
 
 #endif
