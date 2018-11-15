@@ -10,7 +10,7 @@ int n = 10;
 
 //calculate the square root of a given number
 //code reference: https://www.youtube.com/watch?v=znuNWLiBX2A
-int sqrt(int number) {
+double sqrt(int number) {
 
 	double error = 0.00001; //define the precision of your result
     double s = number;
@@ -25,14 +25,14 @@ int sqrt(int number) {
 
 //calculate the power of a given number to a given number
 //code reference: https://www.youtube.com/watch?v=lNdI_7f4d68
-int pow(int n, int p) {
+int pow(int n, int p, int r) {
 	int temp;
 	int c = 1;
 
 	for (int i = 1; i <= p; i++) {
 		temp=n;
 		c=c*temp;
-		//mod here when you know what going on
+		c = c % r;
 	}
 
 	return c;
@@ -40,7 +40,7 @@ int pow(int n, int p) {
 
 //calculate g to the r mod n
 int sqrMod(int g, int r, int n) {
-	return pow(g, r) % n;
+	return pow(g, r, n);
 }
 
 //calculate a*g mod n
@@ -53,14 +53,17 @@ int orderOfG(int g, int n) {
 	//create a hash table
 	HashTable Ord;
 
+	default_random_engine  e(static_cast<unsigned int>(time(0)));
+	uniform_int_distribution<int> d2(0, (n - 1));
+
+
 	//repeat for sqrt n times
 	for (int i = 0; i < sqrt(n); i++) {
 
-		//pick a random number between 1 and n-1 
-		default_random_engine  e(static_cast<unsigned int>(time(0)));
-		uniform_int_distribution<int> d2(0, (n - 1));
-
+		//pick a random number between 1 and n-1;
 		int r = d2(e);
+
+		cout << "r: " << r << endl;
 
 		int y = sqrMod(g, r, n);
 
@@ -94,14 +97,14 @@ int findDLog(int g, int a, int n) {
 	HashTable A;
 	HashTable B;
 
+	default_random_engine  e(static_cast<unsigned int>(time(0)));
+	uniform_int_distribution<int> d2(0, (n - 1));
+
 	int y;
 
 	for (int i = 0; i < sqrt(n); i++) {
 
 		//pick a random number r between 0 and n-1
-		default_random_engine  e(static_cast<unsigned int>(time(0)));
-		uniform_int_distribution<int> d2(0, (n - 1));
-
 		int r = d2(e);
 
 		cout << "r: " << r << endl;
@@ -170,21 +173,27 @@ int main() { //int argc, char** argv
 */
 		int order, log;
 
-		order = orderOfG(g,n);
+		for (int i = 0; i < 10; i++){
 
-		cout << "Order of G: " << order << endl;
+			order = orderOfG(g,n);
 
-		log = findDLog(g,a,n);
+			cout << "Order of G: " << order << endl;
 
-		cout << "Log: " << log << endl;
+			log = findDLog(g,a,n);
 
-		int output = log % order;
+			cout << "Log: " << log << endl;
 
-		if (output < 0) {
-			output += order;
+			int output = log % order;
+
+			if (output < 0) {
+				output += order;
+			}
+
+			cout << "x = " << output << endl;
+
 		}
 
-		cout << "x = " << output << endl;
+
 		
 		return 0;
 	//}
